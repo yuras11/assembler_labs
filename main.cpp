@@ -2,9 +2,9 @@
 
 int main()
 {
-	__int16 a3, a2, a1;
-	__int16 b3, b2, b1;
-    __int16 c3(0), c2(0), c1(0);
+	unsigned __int16 a3, a2, a1;
+	unsigned __int16 b3, b2, b1;
+        unsigned __int16 c3(0), c2(0), c1(0);
 	std::cout << "Enter numbers \"a\":\n";
 	std::cin >> a3 >> a2 >> a1;
 	std::cout << "Enter numbers \"b\":\n";
