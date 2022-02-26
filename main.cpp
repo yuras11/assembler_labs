@@ -16,13 +16,13 @@ int main()
 		add AX, b1
 		mov c1, AX
 
-		mov BX, a2
-		adc BX, b2
-		mov c2, BX
+		mov AX, a2
+		adc AX, b2
+		mov c2, AX
 
-		mov CX, a3
-		adc CX, b3
-		mov c3, CX
+		mov AX, a3
+		adc AX, b3
+		mov c3, AX
 	}
 
 	std::cout << "Numbers you\'ve entered in decimal number system:\n";
