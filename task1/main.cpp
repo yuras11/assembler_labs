@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 int main()
 {
 	__int32 number, result, for_zero_case(0);
@@ -7,16 +8,17 @@ int main()
 
 	std::cout << "Enter your number:\n";
 	std::cin >> number;
-
+	
 	std::cout << "Enter number of expression(1, 2 or 3):\n";
 	std::cin >> number_of_expression;
+
 	while (number_of_expression != 1 && number_of_expression != 2 && number_of_expression != 3)
 	{
 		std::cout << "You\'ve entered a number that is not in the definition area, try again:\n";
 		std::cin >> number_of_expression;
 	}
 	
-  __asm
+	__asm
 	{
 		mov EAX, number_of_expression
 
@@ -65,7 +67,8 @@ start_count_2:
 
 		mov ECX, EAX
 		mov EAX, EBX
-		div ECX
+		CDQ
+		idiv ECX
 
 		mov result, EAX
 
@@ -105,7 +108,8 @@ expression_2 :
 		mov EBX, EAX
 		mov EAX, ECX
 
-		div EBX
+		CDQ
+		idiv EBX
 
 		mov result, EAX
 
@@ -128,13 +132,14 @@ expression_3:
 		mul EBX 
 
 		mov ECX, 4
-		div ECX 
+		CDQ
+		idiv ECX 
 
 		mov result, EAX
 
 end_of_program:
 	}
-  
+	
 	if (for_zero_case != 0)
 	{
 		throw std::runtime_error("Can\'t divide by 0");
