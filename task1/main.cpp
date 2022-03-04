@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 int main()
 {
 	__int32 number, result, for_zero_case(0);
@@ -90,7 +89,7 @@ expression_2 :
 		mov EAX, number
 		mov ECX, 2
 		mul ECX
-		sub EAX, 1
+		add EAX, 1
 
 		mul EBX
 
@@ -127,7 +126,7 @@ expression_3:
 		mov EAX, number
 		mov ECX, 4
 		mul ECX
-		sub EAX, 1
+		add EAX, 1
 
 		mul EBX 
 
@@ -139,7 +138,6 @@ expression_3:
 
 end_of_program:
 	}
-	
 	if (for_zero_case != 0)
 	{
 		throw std::runtime_error("Can\'t divide by 0");
@@ -150,11 +148,11 @@ end_of_program:
 	}
 	else if (number_of_expression == 2)
 	{
-		result_in_cplusplus = pow((2 * number - 1), 2) * (number + 3) / (2 * number);
+		result_in_cplusplus = (2 * number - 1) * (2 * number + 1) * (number + 3) / (2 * number);
 	}
 	else
 	{
-		result_in_cplusplus = pow((4 * number - 1), 2) / 4;
+		result_in_cplusplus = (4 * number - 1) * (4 * number + 1) / 4;
 	}
 
 	std::cout << "Your result: " << std::endl;
