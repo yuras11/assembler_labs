@@ -138,13 +138,14 @@ expression_3:
 
 end_of_program:
 	}
+	
 	if (for_zero_case != 0)
 	{
 		throw std::runtime_error("Can\'t divide by 0");
 	}
 	if (number_of_expression == 1)
 	{
-		result_in_cplusplus = (pow(number, 5) + 2 * (pow(number, 2) - 4) + number) / (pow(number, 3));
+		result_in_cplusplus = (number * number * number * number * number + 2 * (number * number - 4) + number) / (number * number * number);
 	}
 	else if (number_of_expression == 2)
 	{
