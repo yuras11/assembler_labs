@@ -1,0 +1,87 @@
+#include <iostream>
+
+int main()
+{
+    int numerator, denominator, gcd, sign(0);
+    const int negative_one(-1);
+    std::cout << "Enter the numerator of your fraction:\n";
+    std::cin >> numerator;
+    std::cout << "Enter the denominator of your fraction:\n";
+    std::cin >> denominator;
+    while (denominator <= 0)
+    {
+        std::cout << "Incorrect denominator! Try again:\n";
+        std::cin >> denominator;
+    }
+    std::cout << "Your fraction:\n";
+    std::cout << numerator << "/" << denominator << std::endl;
+    __asm
+    {
+        mov EAX, 0
+        mov EBX, 0
+        add EAX, numerator
+        add EBX, denominator
+        CDQ
+
+        CMP EAX, 0
+        JE end_p
+
+        xor ECX, ECX
+        add ECX, EAX
+        SHL ECX, 1
+        JC negative_numerator
+comparison:
+        CMP EAX, EBX
+        JB swap_if_greater
+greatest_common_divisor:
+        div EBX
+
+        CMP EDX, 0
+        JE reduce_fraction
+
+        mov EAX, EBX
+        mov EBX, EDX
+        CDQ
+JMP greatest_common_divisor
+
+negative_numerator:
+        imul negative_one
+        add ECX, negative_one
+        mov sign, ECX
+        JMP comparison
+swap_if_greater:
+        mov ECX, EAX
+        mov EAX, EBX
+        mov EBX, ECX
+        JMP comparison
+reduce_fraction:
+        mov gcd, EBX
+        mov EAX, denominator
+        div gcd
+        mov denominator, EAX
+
+        mov EAX, numerator 
+        
+        CMP sign, 0
+        JNE make_positive
+next_step:
+        div gcd
+        CMP sign, 0
+        JNE make_negative
+final_step:
+        mov numerator, EAX
+        JMP end_p
+make_positive:
+        sub EAX, 1
+        not EAX
+        JMP next_step
+make_negative:
+        not EAX
+        add EAX, 1
+        JMP final_step
+end_p:
+    }
+    std::cout << "Your reduced fraction:\n";
+    std::cout << numerator << "/" << denominator << std::endl;
+    return 0;
+}
