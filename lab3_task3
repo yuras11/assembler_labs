@@ -1,0 +1,43 @@
+#include <iostream>
+
+int main()
+{
+	int counter(0);
+	int array[50];
+	for (int i = 0; i < 50; i++)
+	{
+		array[i] = 0;
+	}
+	__asm
+	{
+		mov ESI, 0
+		mov array[ESI], 0
+		add ESI, 4
+		mov array[ESI], 1
+		add ESI, 4
+start_sum:
+		xor EAX, EAX
+		xor EBX, EBX
+		CDQ
+		add EAX, array[ESI - 8];
+		add EBX, array[ESI - 4];
+
+		add EDX, EAX
+		add EDX, EBX
+		JC end_p
+		
+		mov array[ESI], EDX
+		INC counter
+		
+		add ESI, 4
+JMP start_sum
+end_p:
+	}
+
+	for (int i = 0; i < counter; i++)
+	{
+		std::cout << i << " - " << array[i] << "\n ";
+	}
+	
+	return 0;
+}
