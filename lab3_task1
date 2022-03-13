@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cmath>
+int main()
+{
+	unsigned int number, result; 
+	unsigned long long resultincpp;
+	std::cout << "Enter number:\n";
+	std::cin >> number;
+	while (number <= 0)
+	{
+		std::cout << "You\'ve entered a number that is not in the definition area, try again:\n";
+		std::cin >> number;
+	}
+	__asm
+	{
+		mov EAX, number
+		mov ECX, 11
+
+start_count:
+		mul number
+		loop start_count
+
+		mov EBX, EAX
+
+		mov EAX, number
+		mov ECX, 7
+
+start_count_2:
+		mul number
+		loop start_count_2
+
+		add EAX, EBX
+		add EAX, number
+		mov result, EAX
+	}
+
+	resultincpp = pow(number, 12) + pow(number, 8) + number;
+	std::cout << "The result of counts:\n";
+	std::cout << result << std::endl;
+	std::cout << "The result of counts in c++:\n";
+	std::cout << resultincpp<< std::endl;
+	return 0;
+}
