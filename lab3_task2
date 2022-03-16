@@ -1,77 +1,124 @@
 #include <iostream>
 
+void ResultInCpp(int a, int b, int result, int* arrayX, int* arrayY)
+{
+   int x = 0;
+   for(int i = 0; i < result; i++)
+   {
+       for(int j = 0; j < result; j++)
+       {
+           if(a*j+b*i == result)
+           {
+               arrayX[x] = j;
+               arrayY[x] = i;
+               x++;
+           }
+       }
+   }
+}
+
+bool CompareArrays(int* array1, int* array2, int result)
+{
+    int counter(0);
+    for(int i = 0; i < result; i++)
+    {
+        if(array1[i] == array2[i])
+        {
+            counter++;
+        }
+    }
+    if(counter == result)
+    {
+        return true;
+    }
+    return false;
+}
+
 int main()
 {
-	int x = 0, y = 0, counter = 0;
-	const int result = 50, a = 2, b = 3;
-	constexpr const int arr_size = (result / a) + 1;
-	int arrayX[arr_size], arrayY[arr_size];
-	for (int i = 0; i < arr_size; i++)
-	{
-		arrayX[i] = 0;
-		arrayY[i] = 0;
-	}
-	
-	__asm
-	{
-		mov ESI, 0
-		CDQ
+    int x = 0, y = 0, counter = 0;
+    const int result = 50, a = 2, b = 3;
+    int arrayX[result], arrayY[result];
+    int arrayX_cpp[result], arrayY_cpp[result];
+    for(int i = 0; i < result; i++)
+    {
+        arrayX[i] = 0;
+        arrayY[i] = 0;
+        arrayX_cpp[i] = 0;
+        arrayY_cpp[i] = 0;
+    }
+    __asm
+    {
+    mov ESI, 0
+    CDQ
 increasing_y:
-   
-	increasing_x: 
-		mov EAX, 0
-		add EAX, x
-		imul a
-		mov EBX, EAX
-		mov EAX, 0
-		add EAX, y
-		imul b
-		add EAX, EBX
 
-		CMP EAX, result
-		JE fill_in_arrays
+  increasing_x:
+    mov EAX, 0
+    add EAX, x
+    imul a
+    mov EBX, EAX
+    mov EAX, 0
+    add EAX, y
+    imul b
+    add EAX, EBX
+
+    CMP EAX, result
+    JE fill_in_arrays
 
     next_step_x:
-		mov EAX, 0
-		add EAX, x
-		add EAX, 1
-		
-		CMP EAX, result
-		JGE next_step_y
+    mov EAX, 0
+    add EAX, x
+    add EAX, 1
 
-        mov x, EAX
-	JMP increasing_x
+    CMP EAX, result
+    JGE next_step_y
+
+    mov x, EAX
+  JMP increasing_x
 
     next_step_y:
-		mov EAX, 0
-		add EAX, y
-		add EAX, 1
+    mov EAX, 0
+    add EAX, y
+    add EAX, 1
 
-		CMP EAX, result
-		JGE END_P
-		mov y, EAX
-		mov EAX, 0
-		mov x, EAX
+    CMP EAX, result
+    JGE END_P
+    mov y, EAX
+    mov EAX, 0
+    mov x, EAX
 JMP increasing_y
 
-fill_in_arrays:
-		mov EBX, 0
-		add EBX, x
-		mov arrayX[ESI], EBX
-		mov EBX, 0
-		add EBX, y
-		mov arrayY[ESI], EBX
-		add ESI, 4
-		mov EAX, counter
-		add EAX, 1
-		mov counter, EAX
-		JMP next_step_x
+    fill_in_arrays:
+    mov EBX, 0
+    add EBX, x
+    mov arrayX[ESI], EBX
+    mov EBX, 0
+    add EBX, y
+    mov arrayY[ESI], EBX
+    add ESI, 4
+    mov EAX, counter
+    add EAX, 1
+    mov counter, EAX
+    JMP next_step_x
 END_P:
-	}
-	std::cout << "Integer ordered pairs which are roots of the equation " <<  result <<  " = " << a << "x + " << b <<"y:\n";
-	for (int i = 0; i < counter; i++)
-	{
-		std::cout << "(" << arrayX[i] << ", " << arrayY[i] << ")" << "\n";
-	}
-	return 0;
+    }
+    std::cout << "Integer ordered pairs which are roots of the equation " <<  result <<  " = " << a << "x + " << b <<"y:\n";
+
+    for (int i = 0; i < counter; i++)
+    {
+        std::cout << "(" << arrayX[i] << ", " << arrayY[i] << ")" << "\n";
+    }
+
+    ResultInCpp(a, b, result, arrayX_cpp, arrayY_cpp);
+
+    if(CompareArrays(arrayX, arrayX_cpp, result) && CompareArrays(arrayY, arrayY_cpp, result))
+    {
+        std::cout << "Results coincide!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Results don\'t coincide!" << std::endl;
+    }
+    return 0;
 }
