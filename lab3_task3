@@ -1,43 +1,76 @@
 #include <iostream>
 
+bool CompareArrays(const int* array, const int* array1, int& counter, int& counter_for_check)
+{
+    for(int i = 0; i < counter; i++)
+    {
+        if(array[i] == array1[i])
+        {
+            counter_for_check++;
+        }
+    }
+    if(counter_for_check == counter)
+    {
+        return true;
+    }
+    return false;
+}
+
+
 int main()
 {
-	int counter(0);
-	int array[50];
-	for (int i = 0; i < 50; i++)
-	{
-		array[i] = 0;
-	}
-	__asm
-	{
-		mov ESI, 0
-		mov array[ESI], 0
-		add ESI, 4
-		mov array[ESI], 1
-		add ESI, 4
+    int counter(0), counter_for_check(0);
+    int array[50];
+    int array_cpp[50];
+    for (int & i : array)
+    {
+        i = 0;
+    }
+    __asm
+    {
+    mov ESI, 0
+    mov array[ESI], 0
+    add ESI, 4
+    mov array[ESI], 1
+    add ESI, 4
 start_sum:
-		xor EAX, EAX
-		xor EBX, EBX
-		CDQ
-		add EAX, array[ESI - 8];
-		add EBX, array[ESI - 4];
+    xor EAX, EAX
+    xor EBX, EBX
+    CDQ
+    add EAX, array[ESI - 8];
+    add EBX, array[ESI - 4];
 
-		add EDX, EAX
-		add EDX, EBX
-		JC end_p
-		
-		mov array[ESI], EDX
-		INC counter
-		
-		add ESI, 4
-JMP start_sum
+    add EDX, EAX
+    add EDX, EBX
+    JC end_p
+
+    mov array[ESI], EDX
+    INC counter
+
+    add ESI, 4
+    JMP start_sum
 end_p:
-	}
+    }
 
-	for (int i = 0; i < counter; i++)
-	{
-		std::cout << i << " - " << array[i] << "\n ";
-	}
-	
-	return 0;
+    for (int i = 0; i < counter; i++)
+    {
+        std::cout << i + 1 << " - " << array[i] << "\n ";
+    }
+
+    array_cpp[0] = 0;
+    array_cpp[1] = 1;
+    for (int i = 2; i < counter; i++)
+    {
+        array_cpp[i] = array_cpp[i-1] + array_cpp[i-2];
+    }
+
+    if(CompareArrays(array, array_cpp, counter, counter_for_check))
+    {
+        std::cout << "Results coincide!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Results  don\'t coincide!" << std::endl;
+    }
+    return 0;
 }
