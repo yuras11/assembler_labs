@@ -33,7 +33,7 @@ int main()
     add ESI, 4
     mov array[ESI], 1
     add ESI, 4
-start_sum:
+    start_sum:
     xor EAX, EAX
     xor EBX, EBX
     CDQ
@@ -52,7 +52,7 @@ start_sum:
 end_p:
     }
 
-    for (int i = 0; i < counter; i++)
+    for (int i = 0; i <= counter; i++)
     {
         std::cout << i + 1 << " - " << array[i] << "\n ";
     }
