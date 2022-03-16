@@ -1,9 +1,18 @@
 #include <iostream>
 
+int greatest_common_divisor(int a, int b)
+{
+    while (b)
+    {
+        a %= b;
+        std::swap(a, b);
+    }
+    return a;
+}
+
 int main()
 {
-    int numerator, denominator, gcd, sign(0);
-    const int negative_one(-1);
+    int numerator(0), denominator(1);
     std::cout << "Enter the numerator of your fraction:\n";
     std::cin >> numerator;
     std::cout << "Enter the denominator of your fraction:\n";
@@ -13,75 +22,63 @@ int main()
         std::cout << "Incorrect denominator! Try again:\n";
         std::cin >> denominator;
     }
+    int numerator_cpp(numerator), denominator_cpp(denominator), gcd_incpp;
     std::cout << "Your fraction:\n";
     std::cout << numerator << "/" << denominator << std::endl;
+
     __asm
     {
-        mov EAX, 0
-        mov EBX, 0
-        add EAX, numerator
-        add EBX, denominator
-        CDQ
+    mov EAX, numerator
+    mov EBX, denominator
+    CDQ
+    CMP EAX, 0
+    JE zero_case
 
-        CMP EAX, 0
-        JE end_p
-
-        xor ECX, ECX
-        add ECX, EAX
-        SHL ECX, 1
-        JC negative_numerator
-comparison:
-        CMP EAX, EBX
-        JB swap_if_greater
-greatest_common_divisor:
-        div EBX
-
-        CMP EDX, 0
-        JE reduce_fraction
-
-        mov EAX, EBX
-        mov EBX, EDX
-        CDQ
-JMP greatest_common_divisor
-
-negative_numerator:
-        imul negative_one
-        add ECX, negative_one
-        mov sign, ECX
-        JMP comparison
-swap_if_greater:
-        mov ECX, EAX
-        mov EAX, EBX
-        mov EBX, ECX
-        JMP comparison
-reduce_fraction:
-        mov gcd, EBX
-        mov EAX, denominator
-        div gcd
-        mov denominator, EAX
-
-        mov EAX, numerator 
-        
-        CMP sign, 0
-        JNE make_positive
-next_step:
-        div gcd
-        CMP sign, 0
-        JNE make_negative
-final_step:
+getABS:
+   neg EAX
+   JS getABS
+    mov EBX, denominator
+   beg:
+       CMP EAX, EBX
+       JE end_
+          JG greater
+          sub EBX, EAX
+          JMP beg
+       greater:
+            sub EAX, EBX
+            JMP beg
+    end_:
+        mov EAX, numerator
+        mov ECX, 1
+        imul ECX
+        idiv EBX
         mov numerator, EAX
+        mov EAX, denominator
+        mul ECX
+        div EBX
+        mov denominator, EAX
         JMP end_p
-make_positive:
-        sub EAX, 1
-        not EAX
-        JMP next_step
-make_negative:
-        not EAX
-        add EAX, 1
-        JMP final_step
+zero_case:
+        mov denominator, 1
 end_p:
     }
-    std::cout << "Your reduced fraction:\n";
+
+    gcd_incpp = greatest_common_divisor(numerator_cpp, denominator_cpp);
+    numerator_cpp /= abs(gcd_incpp);
+    denominator_cpp /= abs(gcd_incpp);
+
+    std::cout << "Your reduced fraction in assembler:\n";
     std::cout << numerator << "/" << denominator << std::endl;
+    std::cout << "Your reduced fraction in c++:\n";
+    std::cout << numerator_cpp << "/" << denominator_cpp << std::endl;
+
+    if(numerator == numerator_cpp && denominator == denominator_cpp)
+    {
+        std::cout << "Results coincide!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Results don\'t coincide!" << std::endl;
+    }
     return 0;
 }
