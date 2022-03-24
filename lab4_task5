@@ -1,0 +1,71 @@
+#include <iostream>
+
+int main()
+{
+	float x(0), result(0), one(1), two(2), negative_one(-1);
+	std::cout << "Enter \"x\" in the function f(x) = 2^x:\n";
+	std::cin >> x;
+	int integer_part_x = (int)x;
+	float float_part_x = x - (int)x;
+	__asm
+	{
+		finit
+		fld x
+		fld one
+		fcom
+		fstsw ax
+		sahf
+		jc case_1
+		fld negative_one
+		fld x
+		fcom 
+		fstsw ax
+		sahf
+		jc case_2
+		f2xm1
+		fadd one
+		fstp result
+		jmp end_
+case_1:
+		fld float_part_x
+		f2xm1
+		fadd one
+
+		xor ecx, ecx
+		add ecx, integer_part_x
+		cmp ecx, 0
+		je special_case
+	start_count:
+		fmul two
+		loop start_count		
+		fstp result
+		jmp end_
+	special_case:
+		fmul two
+		fstp result
+		jmp end_
+case_2:
+		fld float_part_x
+		f2xm1
+		fadd one
+
+		mov ecx, integer_part_x
+		neg ecx
+		cmp ecx, 0
+		je another_special_case
+	start_count_2:
+		fdiv two 
+		loop start_count_2
+		fstp result
+		jmp end_
+	another_special_case:
+		fdiv two
+		fstp result
+end_:		
+		fwait
+	}
+	
+	
+	std::cout << "f(" << x << ") = " << result << std::endl;
+	return 0;
+}
