@@ -1,0 +1,61 @@
+#include <iostream>
+#include <iomanip>
+int main()
+{
+	double k1(1);
+	double accuracy5 = 0.00001;
+	double current(0), sum(0), counter5(0), difference(0);
+	double zero(0), one(1), negative_one(-1);
+	int k2(1), int_one(1);
+
+	__asm
+	{
+start_sum_1:		
+		finit		
+		fld one
+		mov ecx, 0
+		add ecx, k2
+		add ecx, 1
+		beg:
+		fmul negative_one 
+		loop beg
+		fstp current
+		fld current
+		fdiv k1
+		fstp current
+		fld sum 
+		fadd current
+		fstp sum
+
+		fldln2
+		fsub sum
+		fabs
+		fstp difference
+
+		fld difference
+		fcom accuracy5
+		xor eax, eax
+		fstsw ax
+		sahf
+		jc check_5
+
+		fld k1
+		fadd one
+		fstp k1
+		xor ebx, ebx
+		mov ebx, int_one
+		add k2, ebx
+		jmp start_sum_1		
+check_5:
+		fld k1
+		fstp counter5
+end_:
+	}
+
+	std::cout << "Number of iterations required to find 5 proper digits after comma:\n";
+	std::cout << counter5 << std::endl;
+	std::cout << "Value obtained by this formula:\n";
+	std::cout << std::setprecision(7) << sum << std::endl;
+
+	return 0;
+}
