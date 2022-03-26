@@ -1,0 +1,153 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+int main()
+{
+	double sum(0), current(0), difference(0);
+	double k(1), one(1), two(2);
+	double counter5(0), counter7(0), counter8(0);
+	double accuracy5 = 0.00001;
+	double accuracy7 = 0.0000001;
+	double accuracy8 = 0.00000001;
+	double sqrt_8 = sqrt(8);
+	__asm
+	{
+start_sum_1:
+		finit
+		fld k
+		fmul two
+		fsub one
+		fstp current
+		fld one
+		fdiv current
+		fstp current
+		fld current
+		fmul current
+		fstp current
+
+		fld sum
+		fadd current
+		fstp sum
+
+		fld sum
+		fsqrt
+		fmul sqrt_8
+		fstp current
+
+		fldpi
+		fsub current
+		fabs
+		fstp difference
+
+		fld difference
+		fcom accuracy5
+		xor eax, eax
+		fstsw ax
+		sahf
+		jc check_5
+
+		fld k
+		fadd one
+		fstp k
+		
+		jmp start_sum_1
+check_5:
+		fld k
+		fstp counter5
+
+start_sum_2:
+		finit
+		fld k
+		fmul two
+		fsub one
+		fstp current
+		fld one
+		fdiv current
+		fstp current
+		fld current
+		fmul current
+		fstp current
+
+		fld sum
+		fadd current
+		fstp sum
+
+		fld sum
+		fsqrt
+		fmul sqrt_8
+		fstp current
+
+		fldpi
+		fsub current
+		fabs
+		fstp difference
+
+		fld difference
+		fcom accuracy7
+		xor eax, eax
+		fstsw ax
+		sahf
+		jc check_7
+
+		fld k
+		fadd one
+		fstp k
+
+		jmp start_sum_2
+check_7:
+		fld k
+		fstp counter7	
+start_sum_3:
+		finit
+		fld k
+		fmul two
+		fsub one
+		fstp current
+		fld one
+		fdiv current
+		fstp current
+		fld current
+		fmul current
+		fstp current
+
+		fld sum
+		fadd current
+		fstp sum
+
+		fld sum
+		fsqrt
+		fmul sqrt_8
+		fstp current
+
+		fldpi
+		fsub current
+		fabs
+		fstp difference
+
+		fld difference
+		fcom accuracy8
+		xor eax, eax
+		fstsw ax
+		sahf
+		jc check_8
+
+		fld k
+		fadd one
+		fstp k
+	
+		jmp start_sum_3
+check_8:
+		fld k
+		fstp counter8
+end_:
+	}
+	std::cout << "Number of iterations required to get 5 digits after comma:\n";
+	std::cout << counter5 << std::endl;
+	std::cout << "Number of iterations required to get 7 digits after comma:\n";
+	std::cout << counter7 << std::endl;
+	std::cout << "Number of iterations required to get 8 digits after comma:\n";
+	std::cout << counter8 << std::endl;
+	std::cout << "Value obtained by this formula:\n";
+	std::cout << std::setprecision(10) << current << std::endl;
+	return 0;
+}
