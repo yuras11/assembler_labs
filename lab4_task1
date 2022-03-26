@@ -1,0 +1,168 @@
+#include <iostream>
+
+int main()
+{
+	double a, b, c;
+	double x1(-10), x2(10), x;
+	double result_x1(0), result_x2(0), result_x(0), result_root(0);
+	double zero(0), two(2), eleven(11);
+	double accur(0.000001), root(0), mod_x(0), current(0);
+	int for_no_root_case(0);
+
+	std::cout << "Enter the coefficient \"a\":\n";
+	std::cin >> a;
+	std::cout << "Enter the coefficient \"b\":\n";
+	std::cin >> b;
+	std::cout << "Enter the coefficient \"c\":\n";
+	std::cin >> c;
+
+	__asm
+	{
+divide:	
+		finit
+		
+		fld x1
+		fmul x1
+		fmul a
+		fld x1
+		fadd eleven
+		fstp current
+		fld b
+		fdiv current
+		fstp current
+		fadd current
+		fadd c
+		fstp result_x1
+
+		fld result_x1
+		fcom zero
+		xor eax, eax
+		fstsw ax
+		sahf
+		jz x1_zero_case
+			
+		fld x2
+		fmul x2
+		fmul a
+		fld x2
+		fadd eleven
+		fstp current
+		fld b
+		fdiv current
+		fstp current
+		fadd current
+		fadd c
+		fstp result_x2
+
+		fld result_x2
+		fcom zero
+		xor eax, eax
+		fstsw ax
+		sahf
+		jz x2_zero_case
+			
+		fld x1
+		fadd x2
+		fdiv two
+		fstp x
+
+		fld x
+		fmul x
+		fmul a
+		fld x
+		fadd eleven
+		fstp current
+		fld b 
+		fdiv current
+		fstp current
+		fadd current
+		fadd c
+		fstp result_x
+
+		fld result_x
+		fcom zero
+		xor eax, eax
+		fstsw ax
+		sahf
+		jz x_zero_case
+	    
+		fld result_x
+		fmul result_x1
+		fcom zero
+		fstsw ax
+		sahf
+		jc change_first
+		jmp change_second
+change_first:
+		fld x
+		fstp x2
+		jmp accuracy
+change_second:
+		fld x
+		fstp x1
+		jmp accuracy
+x_zero_case:
+		fld x
+		fstp root
+		jmp end_
+x1_zero_case:
+		fld x1
+		fstp root
+		jmp end_
+x2_zero_case:
+		fld x2
+		fstp root
+		jmp end_
+accuracy:
+		fld x1
+		fsub x2
+		fabs 
+		fstp mod_x
+		fld mod_x
+		fcom accur
+		xor eax, eax
+		fstsw ax
+		sahf
+		jc root_case
+		jmp divide
+root_case:
+		fld x1
+		fadd x2
+		fdiv two
+		fstp root
+
+		fld root
+		fmul root
+		fmul a
+		fld root
+		fadd eleven
+		fstp current
+		fld b
+		fdiv current
+		fstp current
+		fadd current
+		fadd c
+		fstp result_root
+
+		fld result_root
+		fcom accur
+		xor eax, eax
+		fstsw ax
+		sahf
+		jc end_
+no_root_case:
+		inc for_no_root_case
+end_:
+	}
+	if (for_no_root_case == 1)
+	{
+		std::cout << "The equation has no roots on [-10, 10].\n";
+		exit (0);
+	}
+	else
+	{
+		std::cout << "The equation has at least one root on [-10, 10] which is:\n";
+		std::cout << root << std::endl;
+	}
+	return 0;
+}
